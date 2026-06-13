@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>منصة تعديل السلوك - مدرسة الحمدانية الكبرى الخاصة</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #006B6B;
+    --primary-dark: #004D4D;
+    --primary-light: #00A3A3;
+    --accent: #E8A020;
+    --accent-light: #F5C842;
+    --bg: #F0F4F4;
+    --surface: #FFFFFF;
+    --surface2: #E8F0F0;
+    --text: #1A2E2E;
+    --text-muted: #4A6666;
+    --border: #C0D8D8;
+    --danger: #C0392B;
+    --success: #1A7A4A;
+    --warning: #D4A017;
+    --shadow: 0 4px 24px rgba(0,107,107,0.12);
+    --radius: 16px;
+    --radius-sm: 8px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Cairo', 'Tajawal', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    direction: rtl;
+  }
+
+  /* ===== SIDEBAR ===== */
+  .sidebar {
+    position: fixed;
+    top: 0; right: 0;
+    width: 260px;
+    height: 100vh;
+    background: linear-gradient(160deg, var(--primary-dark) 0%, var(--primary) 60%, var(--primary-light) 100%);
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    box-shadow: -4px 0 32px rgba(0,0,0,0.2);
+    overflow: hidden;
+  }
+
+  .sidebar-logo {
+    padding: 28px 20px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+    position: relative;
+  }
+
+  .logo-badge {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .logo-icon {
+    width: 44px; height: 44px;
+    background: var(--accent);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    box-shadow: 0 4px 12px rgba(232,160,32,0.4);
+  }
+
+  .logo-text h2 {
+    color: white;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+
+  .logo-text span {
+    color: rgba(255,255,255,0.65);
+    font-size: 11px;
+  }
+
+  .sidebar-nav {
+    flex: 1;
+    padding: 16px 12px;
+    overflow-y: auto;
+  }
+
+  .nav-section-title {
+    color: rgba(255,255,255,0.45);
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    padding: 12px 10px 6px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 14px;
+    border-radius: 12px;
+    color: rgba(255,255,255,0.75);
+    font-size: 13.5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: 3px;
+    border: none;
+    background: transparent;
+    width: 100%;
+    text-align: right;
+  }
+
+  .nav-item:hover { background: rgba(255,255,255,0.1); color: white; }
+  .nav-item.active { background: rgba(255,255,255,0.18); color: white; font-weight: 700; box-shadow: inset 3px 0 0 var(--accent); }
+  .nav-item .icon { font-size: 18px; min-width: 22px; text-align: center; }
+
+  .sidebar-footer {
+    padding: 16px;
+    border-top: 1px solid rgba(255,255,255,0.12);
+  }
+
+  .school-info {
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 10px 12px;
+    color: rgba(255,255,255,0.8);
+    font-size: 11px;
+    line-height: 1.6;
+    text-align: center;
+  }
+
+  /* ===== MAIN ===== */
+  .main {
+    margin-right: 260px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .topbar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky; top: 0; z-index: 50;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+
+  .page-title {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--primary-dark);
+  }
+
+  .topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 18px;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+  }
+
+  .btn-primary { background: var(--primary); color: white; }
+  .btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); box-shadow: var(--shadow); }
+  .btn-accent { background: var(--accent); color: white; }
+  .btn-accent:hover { background: #c78518; transform: translateY(-1px); }
+  .btn-outline { background: transparent; color: var(--primary); border: 1.5px solid var(--border); }
+  .btn-outline:hover { border-color: var(--primary); background: var(--surface2); }
+  .btn-danger { background: var(--danger); color: white; }
+  .btn-success { background: var(--success); color: white; }
+  .btn-sm { padding: 6px 12px; font-size: 12px; border-radius: 8px; }
+
+  .content {
+    flex: 1;
+    padding: 28px 32px;
+  }
+
+  /* ===== PAGES ===== */
+  .page { display: none; animation: fadeIn 0.3s ease; }
+  .page.active { display: block; }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+
+  /* ===== DASHBOARD ===== */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 28px;
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s;
+  }
+
+  .stat-card:hover { transform: translateY(-3px); }
+  .stat-card::after {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 4px; height: 100%;
+    border-radius: 0 var(--radius) var(--radius) 0;
+  }
+  .stat-card.teal::after { background: var(--primary); }
+  .stat-card.gold::after { background: var(--accent); }
+  .stat-card.red::after { background: var(--danger); }
+  .stat-card.green::after { background: var(--success); }
+
+  .stat-icon {
+    width: 52px; height: 52px;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+    flex-shrink: 0;
+  }
+  .stat-card.teal .stat-icon { background: #E0F4F4; }
+  .stat-card.gold .stat-icon { background: #FDF3DC; }
+  .stat-card.red .stat-icon { background: #FDECEC; }
+  .stat-card.green .stat-icon { background: #E5F5EE; }
+
+  .stat-info h3 {
+    font-size: 28px;
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .stat-card.teal .stat-info h3 { color: var(--primary); }
+  .stat-card.gold .stat-info h3 { color: var(--accent); }
+  .stat-card.red .stat-info h3 { color: var(--danger); }
+  .stat-card.green .stat-info h3 { color: var(--success); }
+  .stat-info p { font-size: 13px; color: var(--text-muted); font-weight: 500; }
+
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+    margin-bottom: 24px;
+  }
+
+  .card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+
+  .card-header {
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .card-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .card-body { padding: 20px 24px; }
+
+  .data-table { width: 100%; border-collapse: collapse; }
+  .data-table th {
+    background: var(--surface2);
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 700;
+    padding: 12px 14px;
+    text-align: right;
+  }
+
+  .data-table td {
+    padding: 12px 14px;
+    font-size: 13.5px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  .data-table tr:hover td { background: var(--surface2); }
+
+  .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .badge-red { background: #FDECEC; color: var(--danger); }
+  .badge-yellow { background: #FDF3DC; color: #B07A00; }
+  .badge-green { background: #E5F5EE; color: var(--success); }
+
+  .behavior-list { list-style: none; }
+  .behavior-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .behavior-item:last-child { border-bottom: none; }
+  .behavior-bar-wrap {
+    flex: 1;
+    height: 8px;
+    background: var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .behavior-bar {
+    height: 100%;
+    border-radius: 4px;
+    background: linear-gradient(90deg, var(--primary), var(--primary-light));
+    width: 0%;
+    transition: width 0.5s ease;
+  }
+  .behavior-label { font-size: 12.5px; font-weight: 600; min-width: 120px; color: var(--text); }
+  .behavior-count { font-size: 13px; font-weight: 700; color: var(--primary); min-width: 28px; text-align: left; }
+
+  /* ===== FORMS ===== */
+  .form-section {
+    background: var(--surface);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    margin-bottom: 24px;
+    overflow: hidden;
+  }
+
+  .form-section-header {
+    background: linear-gradient(90deg, var(--primary-dark), var(--primary));
+    color: white;
+    padding: 14px 24px;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .form-section-body { padding: 24px; }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  .form-row.cols-2 { grid-template-columns: repeat(2, 1fr); }
+  .form-row.cols-1 { grid-template-columns: 1fr; }
+
+  .form-group label {
+    display: block;
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-family: inherit;
+    font-size: 13.5px;
+    color: var(--text);
+    background: var(--surface);
+    outline: none;
+  }
+
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(0,107,107,0.1);
+  }
+
+  .form-group textarea { min-height: 90px; resize: vertical; }
+
+  /* Observation table */
+  .obs-table-wrap { overflow-x: auto; margin-top: 10px; }
+  .obs-table { width: 100%; border-collapse: collapse; min-width: 650px; }
+  .obs-table th {
+    background: var(--primary);
+    color: white;
+    padding: 11px 14px;
+    font-size: 12.5px;
+    font-weight: 700;
+    text-align: center;
+  }
+  .obs-table td {
+    border: 1px solid var(--border);
+    padding: 8px 10px;
+    text-align: center;
+  }
+  .obs-table td input {
+    width: 100%;
+    border: none;
+    outline: none;
+    font-family: inherit;
+    font-size: 13px;
+    text-align: center;
+    background: transparent;
+  }
+
+  .signature-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 28px;
+  }
+
+  .signature-box {
+    border: 1.5px dashed var(--border);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    text-align: center;
+  }
+
+  .signature-box label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-muted);
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  .signature-box input {
+    width: 100%;
+    border: none;
+    border-bottom: 1.5px solid var(--border);
+    outline: none;
+    font-family: inherit;
+    font-size: 13px;
+    text-align: center;
+    background: transparent;
+  }
+
+  /* ===== MOE HEADER FOR PRINT ===== */
+  .moe-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--border);
+  }
+  .moe-logo-text h4 { font-size: 14px; font-weight: 700; color: var(--primary-dark); }
+  .moe-logo-text p { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+  .moe-center-logo { text-align: center; }
+  .moe-center-logo .dots { display: flex; gap: 3px; justify-content: center; margin-bottom: 4px; }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--primary); }
+  .dot.gold { background: var(--accent); }
+  .moe-center-logo p { font-size: 11px; font-weight: 700; color: var(--primary); }
+
+  .form-title {
+    text-align: center;
+    font-size: 20px;
+    font-weight: 900;
+    color: var(--primary-dark);
+    margin: 15px 0;
+  }
+
+  /* Note lists UI */
+  .note-item {
+    background: var(--surface2);
+    padding: 10px 14px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    font-size: 13px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .note-delete { color: var(--danger); cursor: pointer; border: none; background: none; font-weight: bold; }
+
+  /* ===== TOAST ===== */
+  .toast-container { position: fixed; bottom: 24px; left: 24px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
+  .toast {
+    background: var(--primary-dark); color: white; padding: 12px 18px; border-radius: 10px;
+    font-size: 13.5px; font-weight: 600; box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+    display: flex; align-items: center; gap: 10px;
+  }
+
+  /* ===== PRINT SYSTEM ===== */
+  @media print {
+    .sidebar, .topbar, .topbar-actions, .btn, .form-actions, #bf-severity-btns, .note-delete, th:last-child, td:last-child { display: none !important; }
+    .main { margin-right: 0 !important; }
+    .content { padding: 0 !important; }
+    .page { display: none !important; }
+    .page.active { display: block !important; }
+    body { background: white; }
+    .form-section { box-shadow: none; border: 1px solid #aaa; margin-bottom: 15px; page-break-inside: avoid; }
+    input, select, textarea { border: none !important; border-bottom: 1px dashed #666 !important; background: transparent !important; }
+  }
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-badge">
+      <div class="logo-icon">🏫</div>
+      <div class="logo-text">
+        <h2>منصة تعديل السلوك</h2>
+        <span>مدرسة الحمدانية الكبرى الخاصة</span>
+      </div>
+    </div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-title">القائمة الرئيسية</div>
+    <button class="nav-item active" id="btn-dashboard" onclick="showPage('dashboard')"><span class="icon">📊</span> لوحة المتابعة</button>
+    <button class="nav-item" id="btn-behavior-form" onclick="showPage('behavior-form')"><span class="icon">📝</span> خطة تعديل السلوك</button>
+    <button class="nav-item" id="btn-teacher-form" onclick="showPage('teacher-form')"><span class="icon">👩‍🏫</span> رصد المعلم للمشكلة</button>
+    <button class="nav-item" id="btn-monitor-form" onclick="showPage('monitor-form')"><span class="icon">📋</span> رصد المشكلة السلوكية</button>
+    <button class="nav-item" id="btn-parent-form" onclick="showPage('parent-form')"><span class="icon">✉️</span> إشعار ولي الأمر</button>
+    
+    <div class="nav-section-title">السجلات الإدارية</div>
+    <button class="nav-item" id="btn-records" onclick="showPage('records')"><span class="icon">🗂️</span> سجل الحالات العام</button>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="school-info">
+      العام الدراسي: 2026 - 2027 م<br>
+      دولة الإمارات العربية المتحدة
+    </div>
+  </div>
+</aside>
+
+<main class="main">
+  <header class="topbar">
+    <div class="page-title" id="pageTitle">لوحة المتابعة والتحليلات</div>
+    <div class="topbar-actions">
+      <button class="btn btn-outline btn-sm" onclick="window.print()">🖨️ طباعة المستند الحاضر</button>
+      <button class="btn btn-primary btn-sm" onclick="showPage('behavior-form')">+ فتح خطة جديدة</button>
+    </div>
+  </header>
+
+  <div class="content">
+
+    <div class="page active" id="page-dashboard">
+      <div class="stats-grid">
+        <div class="stat-card teal">
+          <div class="stat-icon">👥</div>
+          <div class="stat-info"><h3 id="totalCases">0</h3><p>إجمالي الحالات</p></div>
+        </div>
+        <div class="stat-card gold">
+          <div class="stat-icon">⚡</div>
+          <div class="stat-info"><h3 id="activeCases">0</h3><p>حالات قيد المتابعة</p></div>
+        </div>
+        <div class="stat-card red">
+          <div class="stat-icon">🔴</div>
+          <div class="stat-info"><h3 id="highCases">0</h3><p>درجة شديدة / خطرة</p></div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-icon">✅</div>
+          <div class="stat-info"><h3 id="resolvedCases">0</h3><p>حالات تم تعديلها</p></div>
+        </div>
+      </div>
+
+      <div class="dashboard-grid">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">📋 آخر الحالات المضافة بالنظام</div>
+            <button class="btn btn-outline btn-sm" onclick="showPage('records')">عرض سجل الحالات</button>
+          </div>
+          <div class="card-body" style="padding:0">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>اسم الطالب/ة</th>
+                  <th>المشكلة السلوكية</th>
+                  <th>الدرجة</th>
+                  <th>الحالة الإدارية</th>
+                  <th>التاريخ</th>
+                </tr>
+              </thead>
+              <tbody id="recentCasesBody">
+                <tr><td colspan="5" style="text-align:center; color:var(--text-muted); padding:30px">لا توجد حالات مسجلة حالياً بالمنصة.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><div class="card-title">📊 تحليل نوعية المشكلات</div></div>
+          <div class="card-body">
+            <ul class="behavior-list" id="behaviorChart">
+              <li style="color:var(--text-muted); font-size:13px; text-align:center; padding:20px">في انتظار تسجيل البيانات...</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">📌 التوجيهات والملاحظات السريعة للأخصائي</div>
+          <button class="btn btn-accent btn-sm" onclick="addNote()">+ إضافة ملاحظة</button>
+        </div>
+        <div class="card-body"><div id="notesList">لا توجد ملاحظات إدارية مضافة.</div></div>
+      </div>
+    </div>
+
+
+    <div class="page" id="page-behavior-form">
+      <div style="display:flex; gap:12px; justify-content:flex-end; margin-bottom:20px;">
+        <button class="btn btn-outline" onclick="resetForm('behavior')">🔄 تفريغ النموذج</button>
+        <button class="btn btn-primary" onclick="saveCurrentForm('behavior')">💾 حفظ في السجل العام</button>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-body">
+          <div class="moe-header">
+            <div class="moe-logo-text">
+              <h4>مدرسة الحمدانية الكبرى الخاصة</h4>
+              <p>قسم التوجيه التربوي والطلبي</p>
+            </div>
+            <div class="moe-center-logo">
+              <div class="dots">
+                <div class="dot"></div><div class="dot gold"></div><div class="dot"></div>
+              </div>
+              <p>العام الدراسي: 2026 - 2027 م</p>
+            </div>
+            <div class="moe-logo-text" style="text-align:left;">
+              <h4>وزارة التربية والتعليم</h4>
+              <p>منصة التقويم السلوكي الرقمية</p>
+            </div>
+          </div>
+          <div class="form-title">أولاً: نموذج خطة تعديل السلوك المتكاملة</div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-header">1. البيانات الأولية للطالب</div>
+        <div class="form-section-body">
+          <div class="form-row">
+            <div class="form-group"><label>اسم الطالب الكامل *</label><input type="text" id="bf-name" placeholder="اسم الطالب رباعي"></div>
+            <div class="form-group">
+              <label>الصف الدراسي</label>
+              <select id="bf-class">
+                <option value="">-- اختر الصف --</option>
+                <option>الصف الأول</option><option>الصف الثاني</option><option>الصف الثالث</option>
+                <option>الصف الرابع</option><option>الصف الخامس</option><option>الصف السادس</option>
+                <option>الصف السابع</option><option>الصف الثامن</option><option>الصف التاسع</option>
+                <option>الصف العاشر</option><option>الصف الحادي عشر</option><option>الصف الثاني عشر</option>
+              </select>
+            </div>
+            <div class="form-group"><label>الشعبة / الفصل</label><input type="text" id="bf-section" placeholder="مثال: أ أو 1"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>تاريخ الميلاد</label><input type="date" id="bf-dob" onchange="calculateAge(this.value, 'bf-age')"></div>
+            <div class="form-group"><label>العمر الزمني (تلقائي)</label><input type="text" id="bf-age" readonly placeholder="يُحسب تلقائياً"></div>
+            <div class="form-group"><label>تاريخ بدء تطبيق الخطة</label><input type="date" id="bf-date" value="2026-09-01"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-header">2. تشخيص وتحديد حدة السلوك</div>
+        <div class="form-section-body">
+          <div class="form-row cols-2">
+            <div class="form-group">
+              <label>المشكلة السلوكية الرئيسية *</label>
+              <select id="bf-problem">
+                <option value="">-- حدد نوع المشكلة السلوكية --</option>
+                <option value="العدوانية والشجار">العدوانية والشجار البدني أو اللفظي</option>
+                <option value="عدم الانتباه والتشتت">التشتت وعدم التركيز داخل الحصة</option>
+                <option value="التأخر عن الحصص">التأخر المتكرر عن الطابور أو الحصص</option>
+                <option value="الغياب المتكرر">الغياب المتكرر بدون عذر رسمي</option>
+                <option value="الإزعاج داخل الصف">إثارة الفوضى والإزعاج المستمر</option>
+                <option value="التنمر">ممارسة التنمر على الزملاء</option>
+                <option value="إتلاف الممتلكات">إتلاف متعمد لممتلكات المدرسة</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>درجة وخطورة المشكلة السلوكية</label>
+              <select id="bf-severity">
+                <option value="خفيفة">درجة أولى - خفيفة</option>
+                <option value="متوسطة">درجة ثانية - متوسطة</option>
+                <option value="شديدة">درجة ثالثة - شديدة</option>
+                <option value="شديدة">درجة رابعة - خطرة جداً</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row cols-1">
+            <div class="form-group"><label>الوصف التفصيلي للسلوك المستهدف تعديله</label><textarea id="bf-desc" placeholder="توصيف دقيق للمشكلة السلوكية وظروف تكرارها..."></textarea></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-header">3. جدول رصد وتكرار السلوك المستهدف (قبل البدء بالخطة)</div>
+        <div class="form-section-body">
+          <div class="obs-table-wrap">
+            <table class="obs-table">
+              <thead>
+                <tr>
+                  <th>الأيام الملاحظة</th>
+                  <th>الحصة 1</th><th>الحصة 2</th><th>الحصة 3</th><th>الحصة 4</th><th>الحصة 5</th>
+                  <th>إجمالي التكرار اليومي</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="calc-row">
+                  <td><b>الأسبوع الأول</b></td>
+                  <td><input type="number" value="0" min="0" onchange="calcTotalRow(this)"></td>
+                  <td><input type="number" value="0" min="0" onchange="calcTotalRow(this)"></td>
+                  <td><input type="number" value="0" min="0" onchange="calcTotalRow(this)"></td>
+                  <td><input type="number" value="0" min="0" onchange="calcTotalRow(this)"></td>
+                  <td><input type="number" value="0" min="0" onchange="calcTotalRow(this)"></td>
+                  <td><input type="number" value="0" readonly style="font-weight:700; color:var(--primary)"></td>
+                </tr>
+                <tr class="calc-row">
+                  <td><b>الأسبوع الثاني</b></td>
+                  <td><input type="number" value="0" min="0" onchange="calcTotalRow(this)"></td>
+                  <td><input type="number" value="0" min="0" onchange="calcTotalRow(this)"></td>
+                  <td><input type="number" value="0" min="0" onchange="calcTotalRow(this)"></td>
+                  <td><input type="number" value="0" min="0" onchange="calcTotalRow(this)"></td>
+                  <td><input type="number" value="0" min="0" onchange="calcTotalRow(this)"></td>
+                  <td><input type="number" value="0" readonly style="font-weight:700; color:var(--primary)"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="signature-row">
+            <div class="signature-box"><label>توقيع الأخصائي الاجتماعي/النفسي</label><input type="text" value="أ / عبد الله الدهيسات"></div>
+            <div class="signature-box"><label>اعتماد رئيس القسم التربوي</label><input type="text" placeholder="اسم رئيس القسم"></div>
+            <div class="signature-box"><label>مصادقة مدير المدرسة</label><input type="text" placeholder="التوقيع والختم"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="page" id="page-teacher-form">
+      <div style="display:flex; gap:12px; justify-content:flex-end; margin-bottom:20px;">
+        <button class="btn btn-outline" onclick="resetForm('teacher')">🔄 تفريغ النموذج</button>
+        <button class="btn btn-primary" onclick="saveCurrentForm('teacher')">💾 حفظ التقرير</button>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-body">
+          <div class="form-title">ثانياً: نموذج رصد معلم المادة للمشكلة السلوكية داخل الصف</div>
+          <div class="form-row">
+            <div class="form-group"><label>اسم الطالب *</label><input type="text" id="tf-name" placeholder="اسم الطالب"></div>
+            <div class="form-group"><label>الصف والشعبة</label><input type="text" id="tf-class" placeholder="مثال: السابع/ب"></div>
+            <div class="form-group"><label>اسم معلم المادة الملاحظ</label><input type="text" id="tf-teacher" placeholder="اسم المعلم"></div>
+          </div>
+          <div class="form-row cols-2">
+            <div class="form-group"><label>المادة الدراسية</label><input type="text" id="tf-subject" placeholder="مثال: اللغة العربية / الرياضيات"></div>
+            <div class="form-group"><label>تاريخ الرصد الأولي</label><input type="date" id="tf-date" value="2026-06-13"></div>
+          </div>
+          <div class="form-row cols-1">
+            <div class="form-group"><label>طبيعة السلوك السلبي الملاحظ من المعلم أثناء الحصة</label><textarea id="tf-desc" placeholder="يرجى ذكر التصرفات التي يبديها الطالب وتؤثر على سير العملية التعليمية..."></textarea></div>
+            <div class="form-group"><label>الإجراءات الفورية المتخذة من قبل المعلم داخل الحصة</label><textarea id="tf-action" placeholder="مثال: تغيير مكان الجلوس، توجيه تنبيه شفهي، التواصل مع الأخصائي..."></textarea></div>
+          </div>
+
+          <div class="signature-row">
+            <div class="signature-box"><label>توقيع معلم المادة</label><input type="text" placeholder="اسم المعلم"></div>
+            <div class="signature-box"><label>توقيع رئيس القسم الأكاديمي</label><input type="text" placeholder="الاسم والتوقيع"></div>
+            <div class="signature-box"><label>رأي وتوقيع الأخصائي الاجتماعي</label><input type="text" value="أ / عبد الله الدهيسات"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="page" id="page-monitor-form">
+      <div style="display:flex; gap:12px; justify-content:flex-end; margin-bottom:20px;">
+        <button class="btn btn-outline" onclick="resetForm('monitor')">🔄 تفريغ النموذج</button>
+        <button class="btn btn-primary" onclick="saveCurrentForm('monitor')">💾 حفظ سجل المتابعة</button>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-body">
+          <div class="form-title">ثالثاً: سجل رصد ومتابعة وتكرار المشكلة السلوكية</div>
+          <div class="form-row">
+            <div class="form-group"><label>اسم الطالب المستهدف *</label><input type="text" id="mf-name" placeholder="أدخل اسم الطالب الكامل"></div>
+            <div class="form-group"><label>الصف الدراسي والفرع</label><input type="text" id="mf-class" placeholder="مثال: العاشر متقدم"></div>
+            <div class="form-group"><label>تاريخ فترة الرصد المكثف</label><input type="date" id="mf-date" value="2026-06-13"></div>
+          </div>
+          
+          <div class="obs-table-wrap">
+            <table class="obs-table">
+              <thead>
+                <tr>
+                  <th>أيام رصد المتابعة</th>
+                  <th>الحصة الأولى</th><th>الحصة الثانية</th><th>الحصة الثالثة</th><th>الحصة الرابعة</th><th>الحصة الخامسة</th>
+                  <th>إجمالي التكرارات</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="calc-row">
+                  <td><b>يوم الإثنين</b></td>
+                  <td><input type="number" value="0" min="0" onchange="calcTotalRow(this)"></td>
+                  <td><input type="number" value="0" min="0" onchange="calcTotalRow(this)"></td>
+                  <td><input type="number" value="0" min="0" onchange="calcTotalRow(this)"></td>
+                  <td><input type="number" value="0" min="0" onchange="calcTotalRow(this)"></td>
+                  <td><input type="number" value="0" min="0" onchange="calcTotalRow(this)"></td>
+                  <td><input type="number" value="0" readonly style="font-weight:700; color:var(--primary)"></td>
+                </tr>
+                <tr class="calc-row">
+                  <td><b>يوم الثلاثاء</b></td>
+                  <td><input type="number" value="0" min="0" onchange="calcTotalRow(this)"></td>
+                  <td><input type="number" value="0" min="0" onchange="calcTotalRow(this)"></td>
+                  <td><input type="number" value="0" min="0" onchange="calcTotalRow(this)"></td>
+                  <td><input type="number" value="0" min="0" onchange="calcTotalRow(this)"></td>
+                  <td><input type="number" value="0" min="0" onchange="calcTotalRow(this)"></td>
+                  <td><input type="number" value="0" readonly style="font-weight:700; color:var(--primary)"></td>
+                </tr>
+                <tr class="calc-row">
+                  <td><b>يوم الأربعاء</b></td>
+                  <td><input type="number" value="0" min="0" onchange="calcTotalRow(this)"></td>
+                  <td><input type="number" value="0" min="0" onchange="calcTotalRow(this)"></td>
+                  <td><input type="number" value="0" min="0" onchange="calcTotalRow(this)"></td>
+                  <td><input type="number" value="0" min="0" onchange="calcTotalRow(this)"></td>
+                  <td><input type="number" value="0" min="0" onchange="calcTotalRow(this)"></td>
+                  <td><input type="number" value="0" readonly style="font-weight:700; color:var(--primary)"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="signature-row" style="margin-top:20px;">
+            <div class="signature-box"><label>أخصائي السلوك القائم بالرصد</label><input type="text" value="أ / عبد الله الدهيسات"></div>
+            <div class="signature-box"><label>توقيع رئيس القسم الإداري</label><input type="text" placeholder="اسم رئيس القسم"></div>
+            <div class="signature-box"><label>اعتماد إدارة المدرسة</label><input type="text" placeholder="التوقيع الرسمي"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="page" id="page-parent-form">
+      <div style="display:flex; gap:12px; justify-content:flex-end; margin-bottom:20px;">
+        <button class="btn btn-outline" onclick="resetForm('parent')">🔄 تفريغ النموذج</button>
+        <button class="btn btn-primary" onclick="saveCurrentForm('parent')">💾 حفظ الإشعار بالسجل</button>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-body">
+          <div class="form-title">رابعاً: إشعار وإخطار ولي الأمر الرسمي بمستوى السلوك</div>
+          <p style="text-align:center; margin-bottom:20px; color:var(--text-muted); font-size:13px;">مستند رسمي يوجه لولي الأمر لإشراكه في خطة تعديل سلوك الطالب</p>
+          
+          <div class="form-row">
+            <div class="form-group"><label>اسم الطالب/ة الموجه بشأنها الإشعار *</label><input type="text" id="pf-name" placeholder="اسم الطالب الكامل"></div>
+            <div class="form-group"><label>الصف والشعبة الدراسيين</label><input type="text" id="pf-class" placeholder="مثال: التاسع عام"></div>
+            <div class="form-group"><label>تاريخ تحرير الخطاب</label><input type="date" id="pf-date" value="2026-06-13"></div>
+          </div>
+
+          <div style="background:var(--surface2); padding:20px; border-radius:var(--radius-sm); margin-bottom:16px; font-size:14px; line-height:1.8;">
+            <p><b>الفاضل/ ولي أمر الطالب/ة المحترم،،</b></p>
+            <p>تحية طيبة وبعد،،</p>
+            <p>انطلاقاً من مبدأ التعاون المشترك والشفاف بين مدرسة الحمدانية الكبرى الخاصة والمنزل لمتابعة التطوير السلوكي والأكاديمي لأبنائنا الطلبة، نود إحاطتكم علماً بأن الطالب قد ظهرت لديه بعض التحديات السلوكية المتمثلة في:</p>
+            <div style="margin:10px 0;"><input type="text" id="pf-problem" placeholder="اكتب المشكلة السلوكية الظاهرة هنا باختصار" style="font-weight:bold; background:white !important; border:1px solid var(--border) !important; padding:6px 12px;"></div>
+            <p>بناءً عليه، وضعت إدارة المدرسة خطة تربوية متكاملة لمساعدته على تجاوز هذا التحدي. نرجو من سيادتكم تقديم الدعم والنصح والتوجيه اللازم في المنزل، والتواصل مع الأخصائي لمتابعة مستجدات الحالة.</p>
+            <p style="text-align:left; margin-top:15px;"><b>وتقبلوا بقبول فائق الاحترام والتقدير،،</b></p>
+          </div>
+
+          <div class="signature-row">
+            <div class="signature-box"><label>الأخصائي التربوي والطلابي</label><input type="text" value="أ / عبد الله الدهيسات"></div>
+            <div class="signature-box"><label>توقيع واعتماد مدير المدرسة</label><input type="text" placeholder="التوقيع والختم"></div>
+            <div class="signature-box"><label>تعهد واطلاع ولي الأمر (عند المقابلة)</label><input type="text" placeholder="توقيع ولي الأمر"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="page" id="page-records">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">🗂️ السجل المركزي العام لجميع الحالات والنماذج بالمنصة</div>
+          <button class="btn btn-danger btn-sm" onclick="clearAllRecords()">⚠️ مسح جميع السجلات بالكامل</button>
+        </div>
+        <div class="card-body" style="padding:0">
+          <div style="padding:15px; background:var(--surface2); display:flex; gap:12px;">
+            <p style="font-size:13px; font-weight:bold; color:var(--primary-dark)">ملاحظة إدارية:</p>
+            <p style="font-size:12px; color:var(--text-muted)">يتم حفظ هذه البيانات تلقائياً بذاكرة المتصفح المحلية الكاش، وتظهر هنا مجمعة لسهولة الحذف والمراجعة السريعة.</p>
+          </div>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>اسم الطالب</th>
+                <th>الصف</th>
+                <th>نوع النموذج الرقمي</th>
+                <th>المشكلة / المحتوى الأولي</th>
+                <th>تاريخ الحفظ</th>
+                <th>إجراءات إدارية</th>
+              </tr>
+            </thead>
+            <tbody id="allRecordsBody">
+              <tr><td colspan="6" style="text-align:center; color:var(--text-muted); padding:30px">لا توجد سجلات محفوظة بالنظام حتى الآن.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+  // Global States initialization from LocalStorage
+  let cases = JSON.parse(localStorage.getItem('behavior_cases_2026')) || [];
+  let notes = JSON.parse(localStorage.getItem('behavior_notes_2026')) || [];
+
+  window.onload = function() {
+    updateDashboard();
